@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#03070c">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src https://api.github.com; img-src 'self' data:; style-src 'self'; script-src 'self'; manifest-src 'self'">
+<title>Chloe</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="bg" aria-hidden="true"></div>
+
+<header class="top">
+  <div class="title"><img src="icon.svg" alt="" width="18" height="18">CHLOE <i>//</i> AM</div>
+  <div class="clock"><b id="clock">--:--</b><span id="date">---</span></div>
+  <button class="icon-btn" id="open-settings" aria-label="Settings">⚙</button>
+</header>
+
+<section class="core">
+  <canvas id="reactor" aria-hidden="true"></canvas>
+  <div class="core-label" role="status"><b id="core-state">STANDING BY</b><span id="core-sub">TAP TO TALK</span></div>
+</section>
+
+<section class="dock">
+  <div class="captions" aria-live="polite">
+    <p class="you"><span>YOU ›</span><em id="cap-you">—</em></p>
+    <p class="am"><span>CHLOE ›</span><em id="cap-am">Standing by.</em></p>
+  </div>
+  <button class="talk" id="talk" aria-pressed="false">TAP TO TALK</button>
+  <div class="chips">
+    <button id="q-urgent">WHAT'S URGENT</button>
+    <button id="q-brief">BRIEF</button>
+    <button id="q-note">NOTE</button>
+  </div>
+  <form class="type" id="type-form" autocomplete="off">
+    <input id="text" placeholder="TYPE · ENTER" aria-label="Type a question or a note" enterkeyhint="send">
+    <button type="submit" class="send">SEND</button>
+  </form>
+</section>
+
+<main class="cards">
+  <section class="card" id="c-today">
+    <h3><span>01</span>TODAY <em id="runs"></em></h3>
+    <div class="gauges">
+      <div class="gauge red" id="g-urgent"><div class="ring"></div><b>0</b><span>URGENT</span></div>
+      <div class="gauge amber" id="g-attention"><div class="ring"></div><b>0</b><span>ATTENTION</span></div>
+      <div class="gauge cyan" id="g-brief"><div class="ring"></div><b>0</b><span>BRIEF</span></div>
+    </div>
+    <ul class="alerts" id="alerts"></ul>
+  </section>
+  <section class="card" id="c-commit">
+    <h3><span>02</span>COMMITMENTS</h3>
+    <div class="big"><div><b id="c-overdue">0</b><span>OVERDUE</span></div><div><b id="c-open">0</b><span>OPEN</span></div></div>
+    <ul class="list" id="c-list"></ul>
+  </section>
+  <section class="card" id="c-convo">
+    <h3><span>03</span>CONVERSATION</h3>
+    <div class="turns" id="turns"><p class="dim">NOTHING YET. ASK, OR SAY “NOTE THAT …”.</p></div>
+  </section>
+  <p class="foot">Read-only on your mail and chats · notes go to the shared inbox · <span id="conn">offline</span></p>
+</main>
+
+<div class="sheet" id="settings" aria-hidden="true" role="dialog" aria-labelledby="set-title">
+  <section class="card">
+    <h3 id="set-title"><span>⚙</span>SETTINGS</h3>
+    <p class="muted">Chloe reads and writes your private <b>second-brain</b> repo with a GitHub key that stays on
+      this phone. Create it at github.com → Settings → Developer settings → <b>Fine-grained tokens</b>: repository
+      <b>ShawnChng98/second-brain only</b>, permission <b>Contents: Read and write</b>. Paste it here.</p>
+    <label class="field">GITHUB KEY <input id="pat" type="password" autocomplete="off" spellcheck="false" placeholder="github_pat_…"></label>
+    <div class="row"><button class="send" id="pat-save">SAVE &amp; TEST</button><span id="pat-status" class="muted"></span></div>
+    <label class="check"><input type="checkbox" id="voice-on" checked> Speak answers when I talk</label>
+    <div class="row"><button class="link" id="pat-forget">FORGET KEY</button><button class="send" id="set-close">DONE</button></div>
+  </section>
+</div>
+
+<script src="speech.js"></script>
+<script src="gh.js"></script>
+<script src="chloe.js"></script>
+<script src="hud.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
