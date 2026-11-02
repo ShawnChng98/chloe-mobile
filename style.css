@@ -88,6 +88,19 @@ button { cursor: pointer; }
 .big b { font: 600 30px/1 var(--mono); color: var(--amber); }
 .big div + div b { color: var(--cyan); }
 .big span { font-size: 9.5px; letter-spacing: .2em; color: var(--muted); }
+.clcounts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; margin-bottom: 8px; text-align: center; }
+.clcounts b { display: block; font: 600 24px/1 var(--mono); }
+.clcounts span { font-size: 8.5px; letter-spacing: .12em; color: var(--muted); }
+.clcounts .u b { color: var(--red); } .clcounts .r b { color: var(--amber); } .clcounts .o b { color: var(--cyan); } .clcounts .w b { color: var(--muted); }
+.cl { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.cl li { display: grid; grid-template-columns: 22px 1fr 40px; gap: 6px; align-items: center; font-size: 12.5px; padding: 6px 0;
+  border-bottom: 1px dashed var(--cyan-faint); }
+.cl li .n { font: 10.5px var(--mono); color: var(--muted); }
+.cl li .t i { display: block; font-style: normal; font-size: 10.5px; color: var(--muted); }
+.cl li.k-urgent .n { color: var(--red); } .cl li.k-reply .n { color: var(--amber); }
+.cl li.done .t { text-decoration: line-through; color: var(--muted); }
+.cl li button { height: 34px; background: none; border: 1px solid var(--cyan-faint); color: var(--cyan); font-size: 15px; }
+.cl .sec { display: block; border: 0; font-size: 9.5px; letter-spacing: .2em; color: var(--muted); padding: 8px 0 0; }
 .turns { display: grid; gap: 10px; }
 .turn { border-top: 1px solid var(--cyan-faint); padding-top: 8px; }
 .turn .q { color: var(--muted); font-size: 12.5px; }

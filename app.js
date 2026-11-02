@@ -127,7 +127,7 @@ function gauge(id, n, total) {
 async function refresh() {
   if (!GH.hasKey) { $("conn").textContent = "no key: open ⚙"; return; }
   try {
-    const [tr, cm] = await Promise.all([Chloe.triage(), Chloe.commitments()]);
+    const tr = await Chloe.triage();
     triageCache = tr;
     const total = tr.counts.urgent + tr.counts.attention + tr.counts.brief;
     gauge("g-urgent", tr.counts.urgent, total); gauge("g-attention", tr.counts.attention, total); gauge("g-brief", tr.counts.brief, total);
@@ -149,14 +149,46 @@ async function refresh() {
       al.appendChild(li);
     }
     if (!al.children.length) al.innerHTML = '<li class="dim">No would-be alerts yet today.</li>';
-    $("c-overdue").textContent = cm.overdue.length; $("c-open").textContent = cm.open;
-    $("c-list").innerHTML = cm.overdue.slice(0, 4).map((c) => `<li><span class="k">${c.due.slice(5)}</span><span class="p">${esc(c.project)}</span><span class="d">LATE</span></li>`)
-      .concat(cm.next.map((c) => `<li><span class="k">${c.due.slice(5)}</span><span class="p">${esc(c.project)}</span><span class="d">NEXT</span></li>`)).join("")
-      || '<li class="dim">Nothing dated.</li>';
+    renderChecklist(await Chloe.checklist());
     $("conn").textContent = `synced ${Chloe.sgt().at.slice(11)}`;
   } catch (e) {
     $("conn").textContent = `offline (${e.message})`;
   }
+}
+
+// ---------- the live checklist (same list as the pinned Telegram message) ----------
+const CL_TITLE = { urgent: "URGENT TODAY", reply: "WAITING FOR YOUR REPLY", owe: "YOU OWE", others: "WAITING ON OTHERS" };
+function ageText(i) {
+  const d = i.kind === "owe" ? i.due : i.since;
+  if (!d) return "";
+  const days = Math.round((Date.now() - new Date(d + "T00:00:00+08:00")) / 86400000);
+  return i.kind === "owe" ? (days > 0 ? `${days} days late` : `due ${d.slice(5)}`) : (days > 0 ? `${days} days` : "");
+}
+function renderChecklist(c) {
+  if (!c) { $("cl-list").innerHTML = '<li class="dim">The list appears after the next hourly run.</li>'; return; }
+  for (const k of ["urgent", "reply", "owe", "others"]) $(`cl-${k}`).textContent = c.counts[k] || 0;
+  $("cl-when").textContent = c.updated ? c.updated.slice(11) : "";
+  let html = "", last = "";
+  for (const i of c.items) {
+    if (i.kind !== last) { html += `<li class="sec">${CL_TITLE[i.kind]}</li>`; last = i.kind; }
+    const done = i.status !== "open";
+    const main = i.kind === "urgent" ? i.what : `${i.who.split("(")[0].trim()} · ${i.what}`;
+    html += `<li class="k-${i.kind}${done ? " done" : ""}" data-id="${esc(i.id)}"><span class="n">${i.n}</span>` +
+      `<span class="t">${esc(main)}<i>${esc(done ? (i.evidence || "done") : [i.project, ageText(i)].filter(Boolean).join(" · "))}</i></span>` +
+      `<button data-a="${done ? "undo" : "done"}" aria-label="${done ? "Put back" : "Mark done"}">${done ? "↺" : "✓"}</button></li>`;
+  }
+  $("cl-list").innerHTML = html || '<li class="dim">All clear.</li>';
+  $("cl-list").querySelectorAll("button").forEach((b) => b.addEventListener("click", async () => {
+    const li = b.closest("li");
+    b.disabled = true; b.textContent = "…";
+    try {
+      await Chloe.tick(li.dataset.id, b.dataset.a);
+      li.classList.toggle("done", b.dataset.a === "done");
+      b.dataset.a = b.dataset.a === "done" ? "undo" : "done";
+      b.textContent = b.dataset.a === "done" ? "✓" : "↺";
+    } catch { b.textContent = "!"; }
+    b.disabled = false;
+  }));
 }
 
 // ---------- input ----------

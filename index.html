@@ -53,9 +53,14 @@
     <ul class="alerts" id="alerts"></ul>
   </section>
   <section class="card" id="c-commit">
-    <h3><span>02</span>COMMITMENTS</h3>
-    <div class="big"><div><b id="c-overdue">0</b><span>OVERDUE</span></div><div><b id="c-open">0</b><span>OPEN</span></div></div>
-    <ul class="list" id="c-list"></ul>
+    <h3><span>02</span>YOUR LIST <em id="cl-when"></em></h3>
+    <div class="clcounts">
+      <div class="u"><b id="cl-urgent">0</b><span>URGENT</span></div>
+      <div class="r"><b id="cl-reply">0</b><span>REPLY</span></div>
+      <div class="o"><b id="cl-owe">0</b><span>YOU OWE</span></div>
+      <div class="w"><b id="cl-others">0</b><span>OTHERS</span></div>
+    </div>
+    <ul class="cl" id="cl-list"><li class="dim">LOADING…</li></ul>
   </section>
   <section class="card" id="c-convo">
     <h3><span>03</span>CONVERSATION</h3>

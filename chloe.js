@@ -37,6 +37,17 @@ const Chloe = (() => {
     return rec;
   }
 
+  // ---- the live checklist (built hourly in the cloud, ticks from anywhere) ----
+  async function checklist() {
+    const t = await GH.read("checklist.json", AM);
+    return t ? JSON.parse(t) : null;
+  }
+  async function tick(id, action) {
+    const rec = { id, action, by: "shawn", at: sgt().at, evidence: "ticked by Shawn (phone)" };
+    await GH.append(`closures/${sgt().date}.jsonl`, JSON.stringify(rec), `checklist: ${action} by Shawn (phone)`, AM);
+    return rec;
+  }
+
   // ---- commitments (Second Brain) ----
   async function commitments() {
     const md = await GH.read("commitments.md") || "";
@@ -112,5 +123,6 @@ const Chloe = (() => {
     return s;
   }
 
-  return { sgt, itemKey, triage, grade, commitments, brief, noteCommand, fileNote, ask, answer, route, urgentSpoken };
+  return { sgt, itemKey, triage, grade, commitments, brief, noteCommand, fileNote, ask, answer, route, urgentSpoken,
+    checklist, tick };
 })();
