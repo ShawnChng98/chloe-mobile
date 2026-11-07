@@ -1,6 +1,6 @@
 // Chloe Mobile service worker: caches the app's own files (code only) so it opens offline.
 // Never caches GitHub API responses: work data stays in the private repo, not in a cache.
-const CACHE = "chloe-v1793588653";
+const CACHE = "chloe-v1794066311";
 const FILES = ["./", "index.html", "style.css", "app.js", "hud.js", "gh.js", "chloe.js", "speech.js",
   "manifest.webmanifest", "icon.svg", "icon-192.png", "icon-512.png"];
 
